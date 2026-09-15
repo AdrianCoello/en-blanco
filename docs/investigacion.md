@@ -59,6 +59,8 @@ El proyecto usa `window.AudioContext` y `webkitAudioContext` como fallback para 
 
 - `ensureAudioStarted()`: desbloquea el contexto con la primera interaccion del menu.
 - `startAmbientMusic()`: cama ambiental suave con osciladores senoidales de 110Hz y 164Hz filtrados por `lowpass` a 400Hz.
+- `startHorrorMusic()` / `stopHorrorMusic()`: drone grave y tenso reservado para la partida y las cinematicas finales; el ambiente suave se conserva para el menu.
+- `playHeartbeatSound()`: doble pulso grave sincronizado cada 1.4 segundos con la pantalla titilante `Corte a Negro`.
 - `setAudioMuted()`: mute global conectado al HUD con boton `🔊/🔇`.
 - `playVoiceBlip()`: voz retro sincronizada con cada caracter del typewriter.
 - `playCarCrashSound()`: ruido blanco filtrado y tono grave para el choque.

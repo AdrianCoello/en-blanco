@@ -35,6 +35,7 @@ El cliente solo envia intenciones de movimiento o distraccion. Express valida li
 - Las escenas narrativas de recuerdos se resuelven desde `apps/client/src/components/SceneRenderer.tsx` hacia `/images/school_classroom.png`, `/images/school_hallway.png`, `/images/rain_car.png`, `/images/rain_street.png`, `/images/crash_detail.png` y `/images/mirror_shards.png`, con fallback SVG pixel-art local para evitar pantallas rotas durante desarrollo.
 - La victoria no muestra una pantalla estatica; usa una secuencia final de cuatro pasos con cliffhanger y tarjeta `CAPITULO 2: PROXIMAMENTE`.
 - El audio se sintetiza con Web Audio API nativa en `apps/client/src/utils/audio.ts`; no se descargan archivos MP3 ni se usa Howler u otra libreria externa. Incluye musica ambiental de osciladores graves, mute global, blips de voz por caracter y efectos de choque, lluvia y cristales.
+- La musica suave se conserva en menu y controles, mientras la partida agrega un drone terrorifico separado. El pulso de `Corte a Negro` se programa con el mismo intervalo de 1.4 segundos que su animacion visual para mantener audio e imagen sincronizados.
 - La caja de dialogo usa un formato flotante semitransparente para no ocultar permanentemente el tablero.
 
 ## Riesgos

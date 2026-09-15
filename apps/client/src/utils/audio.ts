@@ -16,6 +16,8 @@ let audioContext: AudioContext | null = null;
 let masterGain: GainNode | null = null;
 let ambientGain: GainNode | null = null;
 const ambientOscillators: OscillatorNode[] = [];
+let horrorGain: GainNode | null = null;
+const horrorOscillators: OscillatorNode[] = [];
 let rainSource: AudioBufferSourceNode | null = null;
 let rainGain: GainNode | null = null;
 let muted = false;
@@ -62,6 +64,48 @@ export function startAmbientMusic(): void {
 
   filter.connect(ambientGain);
   ambientGain.connect(getMasterGain(context));
+}
+
+export function startHorrorMusic(): void {
+  const context = getAudioContext();
+  if (!context || horrorOscillators.length > 0) return;
+
+  const filter = context.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(180, context.currentTime);
+
+  horrorGain = context.createGain();
+  horrorGain.gain.setValueAtTime(0.0001, context.currentTime);
+  horrorGain.gain.exponentialRampToValueAtTime(0.018, context.currentTime + 2.5);
+
+  [55, 73.42].forEach((frequency, index) => {
+    const oscillator = context.createOscillator();
+    oscillator.type = index === 0 ? 'sine' : 'triangle';
+    oscillator.frequency.setValueAtTime(frequency, context.currentTime);
+    oscillator.detune.setValueAtTime(index === 0 ? -7 : 5, context.currentTime);
+    oscillator.connect(filter);
+    oscillator.start();
+    horrorOscillators.push(oscillator);
+  });
+
+  filter.connect(horrorGain);
+  horrorGain.connect(getMasterGain(context));
+}
+
+export function stopHorrorMusic(): void {
+  const context = getAudioContext();
+  if (!context || !horrorGain) return;
+  horrorGain.gain.setTargetAtTime(0.0001, context.currentTime, 0.12);
+  horrorOscillators.forEach((oscillator) => oscillator.stop(context.currentTime + 0.5));
+  horrorOscillators.length = 0;
+  horrorGain = null;
+}
+
+export function playHeartbeatSound(): void {
+  if (muted) return;
+  const start = getCurrentTime();
+  playTone({ frequency: 72, duration: 0.12, volume: 0.11, type: 'sine', start });
+  playTone({ frequency: 58, duration: 0.16, volume: 0.085, type: 'sine', start: start + 0.14 });
 }
 
 export function playVoiceBlip(role: 'reason' | 'emotion'): void {

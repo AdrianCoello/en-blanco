@@ -9,12 +9,15 @@ import {
   playClickSound,
   playEnemySound,
   playGlassShatterSound,
+  playHeartbeatSound,
   playMemorySound,
   playRainSound,
   playStepSound,
   playVoiceBlip,
   setAudioMuted,
   startAmbientMusic,
+  startHorrorMusic,
+  stopHorrorMusic,
   stopRainSound,
 } from './utils/audio';
 
@@ -144,6 +147,7 @@ export function App() {
   async function startStory(): Promise<void> {
     await ensureAudioStarted();
     startAmbientMusic();
+    startHorrorMusic();
     playClickSound();
     await resetGame();
     lastSeenMemoryId.current = null;
@@ -231,6 +235,7 @@ export function App() {
     playClickSound();
     await resetGame();
     lastSeenMemoryId.current = null;
+    stopHorrorMusic();
     setGameStage('menu');
   }
 
@@ -575,6 +580,14 @@ const victorySteps = [
 function VictoryCinematic({ step, onNext, onMenu }: VictoryCinematicProps) {
   const current = victorySteps[step] ?? victorySteps[3];
   const finalStep = step >= victorySteps.length - 1;
+
+  useEffect(() => {
+    if (current.className !== 'victory-blackout') return;
+
+    playHeartbeatSound();
+    const heartbeatId = window.setInterval(playHeartbeatSound, 1400);
+    return () => window.clearInterval(heartbeatId);
+  }, [current.className]);
 
   return (
     <section className={`victory-cinematic ${current.className}`} role="dialog" aria-modal="true">
