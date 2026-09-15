@@ -166,7 +166,7 @@ Variables:
 - `NODE_ENV`: `production` en el contenedor.
 - `RENDER_DEPLOY_HOOK_URL`: secreto opcional de GitHub Actions para activar el deploy.
 
-El blueprint de Render esta en `render.yaml`. La URL definitiva depende de que el servicio Render sea creado y de que el hook secreto este configurado.
+El blueprint de Render esta en `render.yaml`. La aplicacion publicada esta disponible en `https://en-blanco.onrender.com` y su health check JSON en `https://en-blanco.onrender.com/api/game/state`.
 
 ## Documentacion Y Defensa
 
@@ -196,6 +196,10 @@ Para la defensa se recomienda mostrar: menu, controles, movimiento de ambos role
 ## Repositorio
 
 `https://github.com/AdrianCoello/en-blanco`
+
+## Aplicacion Publicada
+
+`https://en-blanco.onrender.com`
 
 ## Uso Responsable De IA
 

@@ -43,6 +43,8 @@ Variables relevantes:
 - `PORT`: puerto usado por Express. Por defecto es `3000`.
 - `NODE_ENV`: `production` en runtime Docker.
 
+La aplicacion publicada y verificada es `https://en-blanco.onrender.com`. El endpoint de salud es `https://en-blanco.onrender.com/api/game/state` y devuelve el `GameState` en JSON.
+
 ## Accesibilidad Y UX
 
 - Las regiones principales tienen `aria-label` para identificar La Razon y La Emocion.
