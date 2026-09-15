@@ -426,7 +426,7 @@ function Hud({ gameState, muted, onMuteToggle, onReset }: HudProps) {
           {blocks.map((active, index) => <i className={active ? 'active' : ''} key={`hp-${index}`} />)}
         </div>
       </div>
-      <div className="memory-percent">PROGRESO DE MEMORIA: {gameState.memoryProgress}%</div>
+      <div className="memory-percent">PROGRESS DE MEMORIA: {gameState.memoryProgress}%</div>
       <div className="coop-status">{getHudStatus(gameState)}</div>
       <button className="mute-button" onClick={onMuteToggle} aria-label={muted ? 'Activar audio' : 'Silenciar audio'}>{muted ? '🔇' : '🔊'}</button>
       <button className="reset-button" onClick={onReset}>Reset</button>
