@@ -201,6 +201,12 @@ Para la defensa se recomienda mostrar: menu, controles, movimiento de ambos role
 
 `https://en-blanco.onrender.com`
 
+## Video De Demostracion
+
+La evidencia audiovisual de la defensa está documentada aquí:
+
+[`docs/video-demo.md`](docs/video-demo.md)
+
 ## Uso Responsable De IA
 
 Se utilizo IA como asistencia para explorar errores, proponer componentes, generar pruebas y revisar documentacion. El registro de decisiones y verificaciones esta en `docs/decisiones.md`. El estudiante debe poder explicar y modificar cada parte del proyecto durante la defensa.
