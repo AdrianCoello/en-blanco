@@ -66,6 +66,15 @@ export function startAmbientMusic(): void {
   ambientGain.connect(getMasterGain(context));
 }
 
+export function stopAmbientMusic(): void {
+  const context = getAudioContext();
+  if (!context || !ambientGain) return;
+  ambientGain.gain.setTargetAtTime(0.0001, context.currentTime, 0.08);
+  ambientOscillators.forEach((oscillator) => oscillator.stop(context.currentTime + 0.35));
+  ambientOscillators.length = 0;
+  ambientGain = null;
+}
+
 export function startHorrorMusic(): void {
   const context = getAudioContext();
   if (!context || horrorOscillators.length > 0) return;
@@ -104,8 +113,33 @@ export function stopHorrorMusic(): void {
 export function playHeartbeatSound(): void {
   if (muted) return;
   const start = getCurrentTime();
-  playTone({ frequency: 72, duration: 0.12, volume: 0.11, type: 'sine', start });
-  playTone({ frequency: 58, duration: 0.16, volume: 0.085, type: 'sine', start: start + 0.14 });
+  playTone({ frequency: 68, duration: 0.15, volume: 0.24, type: 'sine', start });
+  playTone({ frequency: 48, duration: 0.2, volume: 0.18, type: 'sine', start: start + 0.16 });
+}
+
+export function playDefeatSound(): void {
+  if (muted) return;
+  const start = getCurrentTime();
+  playTone({ frequency: 92, duration: 0.42, volume: 0.2, type: 'sawtooth', start });
+  playTone({ frequency: 46, duration: 0.8, volume: 0.26, type: 'sine', start: start + 0.05 });
+  playTone({ frequency: 31, duration: 1.05, volume: 0.16, type: 'sine', start: start + 0.35 });
+
+  const context = getAudioContext();
+  if (!context) return;
+  const noise = context.createBufferSource();
+  noise.buffer = createNoiseBuffer(context, 0.65);
+  const filter = context.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(900, start);
+  filter.frequency.exponentialRampToValueAtTime(70, start + 0.62);
+  const gain = context.createGain();
+  gain.gain.setValueAtTime(0.22, start);
+  gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.65);
+  noise.connect(filter);
+  filter.connect(gain);
+  gain.connect(getMasterGain(context));
+  noise.start(start);
+  noise.stop(start + 0.68);
 }
 
 export function playVoiceBlip(role: 'reason' | 'emotion'): void {

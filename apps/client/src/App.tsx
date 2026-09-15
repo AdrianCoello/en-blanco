@@ -10,6 +10,7 @@ import {
   playEnemySound,
   playGlassShatterSound,
   playHeartbeatSound,
+  playDefeatSound,
   playMemorySound,
   playRainSound,
   playStepSound,
@@ -17,6 +18,7 @@ import {
   setAudioMuted,
   startAmbientMusic,
   startHorrorMusic,
+  stopAmbientMusic,
   stopHorrorMusic,
   stopRainSound,
 } from './utils/audio';
@@ -78,6 +80,10 @@ export function App() {
     }
     if (gameState.gameOver) setGameStage('gameover');
   }, [gameState]);
+
+  useEffect(() => {
+    if (gameStage === 'gameover') playDefeatSound();
+  }, [gameStage]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent): void {
@@ -146,7 +152,7 @@ export function App() {
 
   async function startStory(): Promise<void> {
     await ensureAudioStarted();
-    startAmbientMusic();
+    stopAmbientMusic();
     startHorrorMusic();
     playClickSound();
     await resetGame();
@@ -236,6 +242,7 @@ export function App() {
     await resetGame();
     lastSeenMemoryId.current = null;
     stopHorrorMusic();
+    startAmbientMusic();
     setGameStage('menu');
   }
 
@@ -244,7 +251,10 @@ export function App() {
     setMuted(nextMuted);
     setAudioMuted(nextMuted);
     if (!nextMuted) {
-      void ensureAudioStarted().then(() => startAmbientMusic());
+      void ensureAudioStarted().then(() => {
+        if (gameStage === 'menu' || gameStage === 'controls') startAmbientMusic();
+        else startHorrorMusic();
+      });
       playClickSound();
     }
   }

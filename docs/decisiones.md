@@ -36,6 +36,7 @@ El cliente solo envia intenciones de movimiento o distraccion. Express valida li
 - La victoria no muestra una pantalla estatica; usa una secuencia final de cuatro pasos con cliffhanger y tarjeta `CAPITULO 2: PROXIMAMENTE`.
 - El audio se sintetiza con Web Audio API nativa en `apps/client/src/utils/audio.ts`; no se descargan archivos MP3 ni se usa Howler u otra libreria externa. Incluye musica ambiental de osciladores graves, mute global, blips de voz por caracter y efectos de choque, lluvia y cristales.
 - La musica suave se conserva en menu y controles, mientras la partida agrega un drone terrorifico separado. El pulso de `Corte a Negro` se programa con el mismo intervalo de 1.4 segundos que su animacion visual para mantener audio e imagen sincronizados.
+- Al entrar en derrota se reproduce una firma sonora independiente mediante `playDefeatSound`, para diferenciar el final tragico de la victoria y evitar que el ambiente normal oculte el resultado.
 - La caja de dialogo usa un formato flotante semitransparente para no ocultar permanentemente el tablero.
 
 ## Riesgos
