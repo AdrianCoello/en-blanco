@@ -16,20 +16,32 @@
 
 ## Estado Autoritativo
 
-El cliente solo envia intenciones de movimiento. Express valida limites del tablero, paredes, recoleccion de objetos, movimiento de la Sombra, cordura, progreso de memoria y condiciones finales.
+El cliente solo envia intenciones de movimiento o distraccion. Express valida limites del tablero, paredes, puertas bloqueadas, llaves, interruptores, recoleccion de objetos, movimiento de la Sombra, cordura, progreso de memoria y condiciones finales.
 
 ## Interfaz
 
 - La interfaz usa una pantalla dividida `grid-template-columns: 1fr 1fr`.
 - La estetica retro se implementa con patrones CSS, pseudo-elementos y animaciones.
 - La caja narrativa inferior imita una ventana de dialogo RPG con retrato del hablante.
-- Los retratos se generan con CSS para evitar dependencias o assets externos obligatorios.
+- Los retratos y sprites se sirven como PNG desde `apps/client/public/avatars`, `apps/client/public/sprites` y se mantienen rutas de fallback sin librerias externas.
+- Las cinematicas de recuerdos se disparan desde datos devueltos por el backend en `lastMemory`, evitando que el cliente invente eventos narrativos no validados.
+- Cada recuerdo del mapa esta definido por coordenada en un catalogo backend y entrega `scenes` por paso para evitar textos o imagenes repetidas por acto.
+- La pantalla de controles es una etapa visual `controls` independiente del menu, implementada sin router externo.
+- La cooperacion cruzada se resuelve en servidor con `reasonKeys`, `emotionSwitches` y `doorsLocked`.
+- La IA de la Sombra es determinista por distancia Manhattan y expone `enemyMoved` / `enemyTargetPosition` para animacion visual en React.
+- El bloqueo alternado de recuerdos se resuelve en servidor con `lastMemoryCollectedBy`, `reasonMemoryLock` y `emotionMemoryLock` para impedir que un rol acumule dos recuerdos consecutivos.
+- El HUD de partida fue reducido a una sola fila de 50px para priorizar los tableros y evitar paneles permanentes que tapen el mapa.
+- El HUD final usa bloques de HP y texto compacto para que la cordura sea legible sin ocupar ancho completo innecesario.
+- Las escenas narrativas de recuerdos se resuelven desde `apps/client/src/components/SceneRenderer.tsx` hacia `/images/school_classroom.png`, `/images/school_hallway.png`, `/images/rain_car.png`, `/images/rain_street.png`, `/images/crash_detail.png` y `/images/mirror_shards.png`, con fallback SVG pixel-art local para evitar pantallas rotas durante desarrollo.
+- La victoria no muestra una pantalla estatica; usa una secuencia final de cuatro pasos con cliffhanger y tarjeta `CAPITULO 2: PROXIMAMENTE`.
+- El audio se sintetiza con Web Audio API nativa en `apps/client/src/utils/audio.ts`; no se descargan archivos MP3 ni se usa Howler u otra libreria externa. Incluye musica ambiental de osciladores graves, mute global, blips de voz por caracter y efectos de choque, lluvia y cristales.
+- La caja de dialogo usa un formato flotante semitransparente para no ocultar permanentemente el tablero.
 
 ## Riesgos
 
 - El estado en memoria se pierde al reiniciar el servidor. Para produccion real se podria usar persistencia, pero no se agrego para mantener el alcance simple.
-- Las pruebas E2E actuales cubren el flujo principal inicial; faltan casos completos de victoria, derrota y acciones invalidas.
-- La estetica pixel-art en CSS puede variar ligeramente segun navegador, aunque no depende de librerias externas.
+- Las pruebas E2E cubren inicio, controles, movimiento, comunicacion HTTP, accion invalida y cinematica de memoria; los finales completos se pueden forzar mediante pruebas de integracion del estado autoritativo.
+- La estetica pixel-art en CSS puede variar ligeramente segun navegador, aunque no depende de librerias externas. Los PNG se incluyen en `public` para que se publiquen junto al build.
 
 ## Registro De Uso De IA
 

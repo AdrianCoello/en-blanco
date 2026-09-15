@@ -7,6 +7,14 @@ export interface Position {
   y: number;
 }
 
+export interface MemoryCinematic {
+  id: string;
+  title: string;
+  discoveredBy: PlayerRole;
+  textSteps: string[];
+  scenes: string[];
+}
+
 export interface GameState {
   sanity: number;
   memoryProgress: number;
@@ -16,13 +24,23 @@ export interface GameState {
   shadowPos: Position;
   reasonGrid: number[][];
   emotionGrid: number[][];
+  reasonKeys: number;
+  emotionSwitches: boolean;
+  doorsLocked: boolean;
+  lastMemoryCollectedBy: PlayerRole | null;
+  reasonMemoryLock: boolean;
+  emotionMemoryLock: boolean;
   logs: string[];
+  lastMemory: MemoryCinematic | null;
+  enemyMoved: boolean;
+  enemyTargetPosition: Position;
+  defeatedBy: PlayerRole | null;
   gameOver: boolean;
   gameWon: boolean;
 }
 
 export interface GameActionRequest {
   role: PlayerRole;
-  actionType: 'move';
-  direction: Direction;
+  actionType: 'move' | 'distract';
+  direction?: Direction;
 }

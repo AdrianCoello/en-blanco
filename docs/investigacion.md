@@ -16,14 +16,13 @@ La prueba actual valida el flujo inicial:
 - Salto con `ENTER`.
 - Render de los dos roles en pantalla dividida.
 - Visualizacion de la leyenda de controles y caja de dialogo.
+- Movimiento y solicitud HTTP hacia `/api/game/action`.
+- Rechazo visible de movimiento fuera del tablero.
+- Apertura de un recuerdo y avance por sus tres pasos.
 
-Casos pendientes recomendados:
+La prueba reinicia el estado con `POST /api/game/reset` antes de comenzar, por lo que tambien funciona si Playwright reutiliza el servidor local.
 
-- Movimiento valido con `WASD` y verificacion de actualizacion de posicion.
-- Movimiento valido con flechas para La Emocion.
-- Accion invalida contra pared o fuera del tablero.
-- Derrota al reducir `sanity` a cero.
-- Victoria al alcanzar `memoryProgress >= 100`.
+Para una defensa completa se puede complementar con una solicitud manual a la API y mostrar las pantallas finales desde un estado preparado.
 
 ## CI/CD
 
@@ -32,6 +31,8 @@ La carpeta `.github/workflows/` contiene tres workflows:
 - `linter.yml`: instala dependencias, ejecuta `npm run lint` y `npm run typecheck`.
 - `e2e.yml`: instala Playwright y ejecuta `npm run test:e2e`.
 - `deploy.yml`: valida build Docker y puede disparar deploy en Render mediante `RENDER_DEPLOY_HOOK_URL`.
+
+Los workflows usan `npm ci` para respetar exactamente el `package-lock.json`. El workflow de deploy siempre construye Docker; el disparo de Render queda condicionado a que el secreto este configurado.
 
 ## Despliegue
 
@@ -48,6 +49,25 @@ Variables relevantes:
 - La caja de dialogo usa `aria-live="polite"` para cambios narrativos.
 - El menu inicial usa botones HTML nativos.
 - La interfaz conserva controles por teclado y textos visibles de ayuda.
+- La pantalla de controles usa teclas dibujadas con CSS y simbolos de flecha visibles para Jugador 2.
+
+## Audio Nativo
+
+El proyecto usa `window.AudioContext` y `webkitAudioContext` como fallback para generar sonidos 8-bit por codigo:
+
+- `ensureAudioStarted()`: desbloquea el contexto con la primera interaccion del menu.
+- `startAmbientMusic()`: cama ambiental suave con osciladores senoidales de 110Hz y 164Hz filtrados por `lowpass` a 400Hz.
+- `setAudioMuted()`: mute global conectado al HUD con boton `🔊/🔇`.
+- `playVoiceBlip()`: voz retro sincronizada con cada caracter del typewriter.
+- `playCarCrashSound()`: ruido blanco filtrado y tono grave para el choque.
+- `playRainSound()` / `stopRainSound()`: estatica filtrada continua para lluvia.
+- `playGlassShatterSound()`: tonos agudos descendentes para cristales rotos.
+- `playStepSound()`: blip corto para movimiento.
+- `playMemorySound()`: escala ascendente para recuerdos, llaves o interruptores.
+- `playEnemySound()`: pulso grave cuando la Sombra se desplaza.
+- `playClickSound()`: clic de interfaz.
+
+No se usan librerias de audio ni archivos externos.
 
 ## Referencias Conceptuales
 
